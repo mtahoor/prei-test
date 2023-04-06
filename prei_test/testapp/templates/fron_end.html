@@ -1,0 +1,738 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prei Test</title>
+    {% comment %} <link rel="stylesheet" href="style.css"> {% endcomment %}
+    <!-- FontAweome CDN Link for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+    
+    <style>
+        /* importing google fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body{
+    background: #007bff;
+}
+
+::selection{
+    color: #fff;
+    background: #007bff;
+}
+
+.form_page,
+.info_box,
+.quiz_box,
+.result_box{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),
+                0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.info_box.activeInfo,
+.quiz_box.activeQuiz,
+.result_box.activeResult{
+    opacity: 1;
+    z-index: 5;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.start_btn button{
+    font-size: 20px;
+    font-weight: 500;
+    color: #007bff;
+    padding: 10px 20px;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.info_box{
+    width: 540px;
+    background: #fff;
+    border-radius: 5px;
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.info_box .info-title{
+    height: 60px;
+    width: 100%;
+    border-bottom: 1px solid lightgrey;
+    display: flex;
+    align-items: center;
+    padding: 0 30px;
+    border-radius: 5px 5px 0 0;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.info_box .info-list{
+    padding: 15px 30px;
+}
+
+.info_box .info-list .info{
+    margin: 5px 0;
+    font-size: 17px;
+}
+
+.info_box .info-list .info span{
+    font-weight: 600;
+    color: #007bff;
+}
+.info_box .buttons{
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 0 30px;
+    border-top: 1px solid lightgrey;
+}
+
+.info_box .buttons button{
+    margin: 0 5px;
+    height: 40px;
+    width: 100px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    border: 1px solid #007bff;
+    transition: all 0.3s ease;
+}
+
+.quiz_box{
+    width:540px;
+    background: #fff;
+    border-radius: 5px;
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.quiz_box header{
+    position: relative;
+    z-index: 2;
+    height: 70px;
+    padding: 0 30px;
+    background: #fff;
+    border-radius: 5px 5px 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0px 3px 5px 1px rgba(0,0,0,0.1);
+}
+
+.quiz_box header .title{
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.quiz_box header .timer{
+    color: #004085;
+    background: #cce5ff;
+    border: 1px solid #b8daff;
+    height: 45px;
+    padding: 0 8px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 145px;
+}
+
+.quiz_box header .timer .time_left_txt{
+    font-weight: 400;
+    font-size: 17px;
+    user-select: none;
+}
+
+.quiz_box header .timer .timer_sec{
+    font-size: 18px;
+    font-weight: 500;
+    height: 30px;
+    width: 45px;
+    color: #fff;
+    border-radius: 5px;
+    line-height: 30px;
+    text-align: center;
+    background: #343a40;
+    border: 1px solid #343a40;
+    user-select: none;
+}
+
+.quiz_box header .time_line{
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    height: 3px;
+    background: #007bff;
+}
+
+section{
+    padding: 25px 30px 20px 30px;
+    background: #fff;
+}
+
+section .que_text{
+    font-size: 25px;
+    font-weight: 600;
+}
+
+section .option_list{
+    padding: 20px 0px;
+    display: block;  
+}
+
+section .option_list .option{
+    background: aliceblue;
+    border: 1px solid #84c5fe;
+    border-radius: 5px;
+    padding: 8px 15px;
+    font-size: 17px;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+section .option_list .option:last-child{
+    margin-bottom: 0px;
+}
+
+section .option_list .option:hover{
+    color: #004085;
+    background: #cce5ff;
+    border: 1px solid #b8daff;
+}
+
+section .option_list .option.correct{
+    color: #155724;
+    background: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+section .option_list .option.incorrect{
+    color: #721c24;
+    background: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+section .option_list .option.disabled{
+    pointer-events: none;
+}
+
+section .option_list .option .icon{
+    height: 26px;
+    width: 26px;
+    border: 2px solid transparent;
+    border-radius: 50%;
+    text-align: center;
+    font-size: 13px;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    line-height: 24px;
+}
+.option_list .option .icon.tick{
+    color: #23903c;
+    border-color: #23903c;
+    background: #d4edda;
+}
+
+.option_list .option .icon.cross{
+    color: #a42834;
+    background: #f8d7da;
+    border-color: #a42834;
+}
+
+footer{
+    height: 60px;
+    padding: 0 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid lightgrey;
+}
+
+footer .total_que span{
+    display: flex;
+    user-select: none;
+}
+
+footer .total_que span p{
+    font-weight: 500;
+    padding: 0 5px;
+}
+
+footer .total_que span p:first-child{
+    padding-left: 0px;
+}
+
+footer button{
+    height: 40px;
+    padding: 0 13px;
+    font-size: 18px;
+    font-weight: 400;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    color: #fff;
+    border-radius: 5px;
+    background: #007bff;
+    border: 1px solid #007bff;
+    line-height: 10px;
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.95);
+    transition: all 0.3s ease;
+}
+
+footer button:hover{
+    background: #0263ca;
+}
+
+footer button.show{
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+}
+
+.result_box{
+    background: #fff;
+    border-radius: 5px;
+    display: flex;
+    padding: 25px 30px;
+    width: 450px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    transform: translate(-50%, -50%) scale(0.9);
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.result_box .icon{
+    font-size: 100px;
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+.result_box .complete_text{
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.result_box .score_text span{
+    display: flex;
+    margin: 10px 0;
+    font-size: 18px;
+    font-weight: 500;
+}
+
+.result_box .score_text span p{
+    padding: 0 4px;
+    font-weight: 600;
+}
+
+.result_box .buttons{
+    display: flex;
+    margin: 20px 0;
+}
+
+.result_box .buttons button{
+    margin: 0 10px;
+    height: 45px;
+    padding: 0 20px;
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    border: 1px solid #007bff;
+    transition: all 0.3s ease;
+}
+
+.buttons button.restart{
+    color: #fff;
+    background: #007bff;
+}
+
+.buttons button.restart:hover{
+    background: #0263ca;
+}
+
+.buttons button.quit{
+    color: #007bff;
+    background: #fff;
+}
+
+.buttons button.quit:hover{
+    color: #fff;
+    background: #007bff;
+}
+.form_page{
+    height: auto;
+    width: 50%;
+    margin: auto;
+    /* border: 2px solid; */
+}
+.main_form_div{
+    height: 40vh;
+    overflow-y: scroll;
+}
+    </style>
+</head>
+<body>
+    <!-- start Quiz button -->
+   <div class="form_page bg-light py-3" id="form" >
+    <h2 style="font-weight: bold; text-align: center;padding: 10px 0px;box-sizing: border-box;color:black;text-align: center;">Ready to Test?<br> Fill Out This Form to Get Started!</h2>
+    <div class="form_data px-5">
+        <form method="post" style="color: black;">
+            {% csrf_token %}
+          <div class="container main_form_div">
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <label for="">Name</label>
+                    <input class="form-control my-3" type="text" name="name">
+                    <label for="">Whatsapp Number</label>
+                    <input class="form-control my-3" type="number" name="WhatsappNumbr" id="">
+                    <label for="">Office Name</label>
+                    <input class="form-control my-3" type="text" name="Office_name" id="">
+                    <label for="">Office Address</label>
+                    <input class="form-control my-3" type="text" name="Office_address" id="">
+                    <label for="">Working in Current Office Since</label>
+                    <select name="" id="years" class="form-select my-3" >
+                        <option value="" selected disabled hidden>From </option>
+                    </select>
+                    <label for="">Upload CNIC</label>
+                    <input class="form-control my-3" type="file" accept="jpg,png" name="cnic_front" id="">
+                </div>
+                <div class="col-md-6 col-sm-12">
+                    <label for="">Mobile Number</label>
+                    <input class="form-control my-3" type="number" name="mobile_number">
+                    <label for="">CNIC</label>
+                    <input class="form-control my-3" type="number" name="CNIC" id="">
+                    <label for="">City</label>
+                    <input class="form-control my-3" type="text" name="City" id="">
+                    <label for="">Working in Real Estate Since</label>
+                    <select name="" id="abc" class="form-select my-3" >
+                        <option value="" selected disabled hidden>Since </option>
+                    </select>
+                    <label for="">Are you</label>
+                    <div class="form-group my-3">
+                        <input type="radio" name="Employee" id="">
+                        <label for="">Employer</label>
+                        <input type="radio" name="Employee" id="">
+                        <label for="">Employee</label>
+                    </div>
+                    <label for="" style="margin-top: 12px;">Back CNIC</label>
+                    <input class="form-control my-3" type="file" name="cnic_back" id="">
+                </div>
+
+            </div>
+          </div>
+            <center> 
+                <div class="start_btn">
+                    <button  style="border: 2px solid #007bff;margin-top: 20px;" type="submit">
+                        Start Test
+                    </button>
+                </div>
+            </center>
+        </form>
+        
+    </div>
+   </div>
+
+
+    <!-- Info Box -->
+    <div class="info_box">
+        <div class="info-title"><span>Some Rules of this Quiz</span></div>
+        <div class="info-list">
+            <div class="info">1. You will have only <span>200 seconds</span>.</div>
+            <div class="info">2. Once you select your answer, it can't be undone.</div>
+            <div class="info">3. You can't select any option once time goes off.</div>
+            <div class="info">4. You can't exit from the TEST while you're taking it.</div>
+            <div class="info">5. You'll get points on the basis of your correct answers.</div>
+        </div>
+        <div class="buttons">
+            <button class="quit">Exit Quiz</button>
+            <button class="restart">Continue</button>
+        </div>
+    </div>
+
+    <!-- Quiz Box -->
+    <div class="quiz_box">
+        <header>
+            <div class="title">Prei Test Application</div>
+            <div class="timer">
+                <div class="time_left_txt">Time Left</div>
+                <div class="timer_sec"  id="countdown">200</div>
+            </div>
+            <div class="time_line"></div>
+        </header>
+        <section>
+            <div class="que_text">
+                <!-- Here I've inserted question from JavaScript -->
+            </div>
+            <div class="option_list">
+                <!-- Here I've inserted options from JavaScript -->
+            </div>
+        </section>
+
+        <!-- footer of Quiz Box -->
+        <footer>
+            <div class="total_que">
+                <!-- Here I've inserted Question Count Number from JavaScript -->
+            </div>
+            <button class="next_btn">Next Que</button>
+        </footer>
+    </div>
+
+    <!-- Result Box -->
+    <div class="result_box">
+        <div class="icon">
+            <i class="fas fa-crown"></i>
+        </div>
+        <div class="complete_text">You've completed the TEST!</div>
+        <div class="score_text">
+            <!-- Here I've inserted Score Result from JavaScript -->
+        </div>
+        <div class="buttons">
+            <button class="restart" style="display: none;">Replay Quiz</button>
+            <button class="quit" style="display: none;">Quit Quiz</button>
+        </div>
+    </div>
+    <form style="display: none;" method="post" id="sendmarks">
+        {% csrf_token%}
+        <input type="text" name="marks" id="mm">
+        <button type="submit" id="auto">submit</button>
+    </form>
+    
+    <!-- Inside this JavaScript file I've inserted Questions and Options only -->
+    <script >
+        // creating an array and passing the number, questions, options, and answers
+        let questions = [
+                {% for question in questions %}
+            {
+            numb: {{forloop.counter}},
+            question: "{{question.0}}",
+            answer: "{{question.2}}",
+            options: [
+            "{{question.1.0}}",
+            "{{question.1.1}}",
+            {% if question.1.2 %}
+            "{{question.1.2}}",
+            "{{question.1.3}}",
+            {% endif %}
+            ]
+        },
+            {%endfor%}
+        ];
+    </script>
+
+    <!-- Inside this JavaScript file I've coded all Quiz Codes -->
+    <script >
+        //selecting all required elements
+const start_btn = document.querySelector(".start_btn button");
+const info_box = document.querySelector(".info_box");
+const exit_btn = info_box.querySelector(".buttons .quit");
+const continue_btn = info_box.querySelector(".buttons .restart");
+const quiz_box = document.querySelector(".quiz_box");
+const result_box = document.querySelector(".result_box");
+const option_list = document.querySelector(".option_list");
+
+
+// if startQuiz button clicked
+window.onload = ()=>{
+    {% if s %}
+    info_box.classList.add("activeInfo"); //show info box
+    document.getElementById("form").style.display = "none";
+    queCounter(que_numb);
+    {% elif m %}
+    userScore='{{m}}'
+    showResult();
+    document.getElementById("form").style.display = "none";  
+    {% endif %}
+}
+
+// if exitQuiz button clicked
+exit_btn.onclick = ()=>{
+    info_box.classList.remove("activeInfo"); //hide info box
+}
+
+// if continueQuiz button clicked
+continue_btn.onclick = ()=>{
+    timer();
+    info_box.classList.remove("activeInfo"); //hide info box
+    quiz_box.classList.add("activeQuiz"); //show quiz box
+    showQuetions(0); //calling showQestions function
+   
+}
+
+let que_count = 0;
+let que_numb = 1;
+let userScore = 0;
+
+
+// post the marks of student to the backend
+function autosubmit(){
+    let marks=document.getElementById('mm');
+    marks.value=userScore;
+    let buttonn=document.getElementById('auto');
+    buttonn.click();
+
+}
+
+
+const restart_quiz = result_box.querySelector(".buttons .restart");
+const quit_quiz = result_box.querySelector(".buttons .quit");
+
+// if restartQuiz button clicked
+restart_quiz.onclick = ()=>{
+    quiz_box.classList.add("activeQuiz"); //show quiz box
+    result_box.classList.remove("activeResult"); //hide result box
+     
+    que_count = 0;
+    que_numb = 1;
+    userScore = 0;
+    showQuetions(que_count); //calling showQestions function
+    queCounter(que_numb); //passing que_numb value to queCounter
+}
+
+// if quitQuiz button clicked
+quit_quiz.onclick = ()=>{
+    window.location.reload(); //reload the current window
+}
+
+const next_btn = document.querySelector("footer .next_btn");
+const bottom_ques_counter = document.querySelector("footer .total_que");
+
+// if Next Que button clicked
+next_btn.onclick = ()=>{
+    if(que_count < questions.length - 1){ //if question count is less than total question length
+        que_count++; //increment the que_count value
+        que_numb++; //increment the que_numb value
+        showQuetions(que_count); //calling showQestions function
+        queCounter(que_numb); //passing que_numb value to queCounter  
+    }else{
+        autosubmit();    
+        // showResult(); //calling showResult function
+    }
+}
+// getting questions and options from array
+function showQuetions(index){
+    const que_text = document.querySelector(".que_text");
+    //creating a new span and div tag for question and option and passing the value using array index
+    let que_tag = '<span>'+ questions[index].numb + ". " + questions[index].question +'</span>';
+    console.log(que_tag);
+    let option_tag;
+     if(questions[index].options.length==4){ 
+        option_tag = '<div class="option"><span>'+ questions[index].options[0] +'</span></div>'
+        + '<div class="option"><span>'+ questions[index].options[1] +'</span></div>'
+        + '<div class="option"><span>'+ questions[index].options[2] +'</span></div>'
+        + '<div class="option"><span>'+ questions[index].options[3] +'</span></div>';
+    }
+    else{
+        option_tag = '<div class="option"><span>'+ questions[index].options[0] +'</span></div>'
+        + '<div class="option"><span>'+ questions[index].options[1] +'</span></div>';
+    } 
+    que_text.innerHTML = que_tag; //adding new span tag inside que_tag
+    option_list.innerHTML = option_tag; //adding new div tag inside option_tag  
+    const option = option_list.querySelectorAll(".option");
+    console.log(option.length);
+    // set onclick attribute to all available options
+    for(i=0; i < option.length; i++){
+        option[i].setAttribute("onclick", "optionSelected(this)");
+    }
+}
+// creating the new div tags which for icons
+let tickIconTag = '<div class="icon tick"><i class="fas fa-check"></i></div>';
+let crossIconTag = '<div class="icon cross"><i class="fas fa-times"></i></div>';
+//if user clicked on option
+function optionSelected(answer){
+    // clearInterval(counter); //clear counter
+    // clearInterval(counterLine); //clear counterLine
+    let userAns = answer.textContent; //getting user selected option
+    let correcAns = questions[que_count].answer; //getting correct answer from array
+    const allOptions = option_list.children.length; //getting all option items
+   
+    if(userAns == correcAns){ //if user selected option is equal to array's correct answer
+        userScore += 1; //upgrading score value with 1
+        answer.classList.add("correct"); //adding green color to correct selected option
+        next_btn.click();
+        console.log('true');
+   
+    }else{
+        answer.classList.add("correct"); //adding red color to correct selected option
+        next_btn.click();
+        console.log('False');
+       
+       
+    }
+}
+
+function showResult(){
+    info_box.classList.remove("activeInfo"); //hide info box
+    quiz_box.classList.remove("activeQuiz"); //hide quiz box
+    result_box.classList.add("activeResult"); //show result box
+    const scoreText = result_box.querySelector(".score_text");
+    if (userScore > 16){ // if user scored more than 3
+        //creating a new span tag and passing the user score number and total question number
+        let scoreTag = '<center><span>and congrats! , You got '+ userScore +' out of '+ questions.length +' <br> And you are illegible for the certificate.</span></center>';
+        scoreText.innerHTML = scoreTag;  //adding new span tag inside score_Text
+    }
+    else{ // if user scored less than 1
+        let scoreTag = '<center><span>sorry , You got only '+ userScore +' out of '+ questions.length +'<br> you are NOT illegible for the certificate.</span></center>';
+        scoreText.innerHTML = scoreTag;
+    }
+}
+
+
+
+
+function queCounter(index){
+    //creating a new span tag and passing the question number and total question
+    let totalQueCounTag = '<span><p>'+ index +'</p> of <p>'+ questions.length +'</p> Questions</span>';
+    bottom_ques_counter.innerHTML = totalQueCounTag;  //adding new span tag inside bottom_ques_counter
+}
+    </script>
+<script>
+    function timer(){
+    var timeLeft = 200;
+    var countdown = setInterval(function() {
+      timeLeft--;
+      document.getElementById("countdown").textContent = timeLeft;
+      if (timeLeft == 0) {
+        clearInterval(countdown);
+        autosubmit();
+        // document.getElementById("myForm").submit();
+      }
+    }, 1000);}
+  </script>
+</body>
+</html>
+</html>
